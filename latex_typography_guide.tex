@@ -1,0 +1,687 @@
+%%% Laboratory	 Notes
+%%% Template by Mikhail Klassen, April 2013
+%%% Contributions from Sarah Mount, May 2014
+\documentclass[a4paper]{tufte-handout}
+
+% \setlength{\parskip}{\baselineskip}%
+% \setlength{\parindent}{0pt}%
+
+\makeatletter
+% Paragraph indentation and separation for normal text
+\renewcommand{\@tufte@reset@par}{%
+  \setlength{\RaggedRightParindent}{0.0pc}%
+  \setlength{\JustifyingParindent}{1.0pc}%
+  \setlength{\parindent}{0pc}%
+  \setlength{\parskip}{0pt}%
+}
+\@tufte@reset@par
+
+% Paragraph indentation and separation for marginal text
+\renewcommand{\@tufte@margin@par}{%
+  \setlength{\RaggedRightParindent}{0.5pc}%
+  \setlength{\JustifyingParindent}{0.5pc}%
+  \setlength{\parindent}{0.5pc}%
+  \setlength{\parskip}{0pt}%
+}
+\makeatother
+
+\include{user_commands}
+\setcounter{secnumdepth}{1}
+
+\newcommand{\userName}{Benjamin J. Morgan}
+\newcommand{\institution}{Department of Chemistry, University of Bath}
+
+\usepackage{lab_notes}
+\usepackage{amsmath}
+\usepackage{listings}
+\usepackage{siunitx}
+\usepackage{chemformula}
+\usepackage[version=4]{mhchem}
+\usepackage{kroger_vink}
+\lstset{numbers=none}
+\newcommand{\angstrom}{\text{\normalfont\AA}}
+
+\usepackage{hyperref}
+\hypersetup{
+    pdffitwindow=false,            % window fit to page
+    pdfstartview={Fit},            % fits width of page to window
+    pdftitle={LaTeX typography guide},     % document title
+    pdfauthor={Benjamin Morgan},         % author name
+    pdfsubject={},                 % document topic(s)
+    pdfnewwindow=true,             % links in new window
+    colorlinks=true,               % coloured links, not boxed
+    linkcolor=DarkScarletRed,      % colour of internal links
+    citecolor=DarkChameleon,       % colour of links to bibliography
+    filecolor=DarkPlum,            % colour of file links
+    urlcolor=DarkSkyBlue           % colour of external links
+}
+
+\graphicspath{{./figures/}}
+
+\title{LaTeX typography guide}
+\author{Benjamin J.\ Morgan}
+%\title{hello}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+This document is for $\ldots$ One of the benefits of writing using \LaTeX\ is (ease of producing attractive documents --- good typography).
+
+TODO: why worry about typography?
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Use the math environment for mathematical text}
+\LaTeX\ typsets text inside math environments differently to regular text. The two most common ways to include pieces of mathematical text and symbols are \emph{inline} formulae, and \emph{equations}.
+
+Inline formulae are displayed as part of their surrounding text, such as $y=mx+c$. They are delimited using \lstinline{$} $\ldots$ \lstinline{$} symbols.
+As an example, the first sentence in this paragraph is generated using
+\begin{lstlisting}
+Inline formulae are displayed as part of their
+surrounding text, such as $y=mx+c$.
+\end{lstlisting}
+
+Equations appear on their own lines, and are usually numbered (by default), e.g.
+\begin{equation}
+y=mx+c.
+\end{equation}
+Equation environments are delimited using \lstinline$\begin{equation}$ and \lstinline$\end{equation}$ commands. \\
+e.g.\ the equation above is generated using
+\begin{lstlisting}
+\begin{equation}
+y=mx+c.
+\end{equation}
+\end{lstlisting}
+Formulae numbers can be removed by using \lstinline$\begin{equation*}$ and \lstinline$\end{equation*}$ commands to delimit the environment.
+
+When referring to variables in regular text, surrounding these with \lstinline{$} $\ldots$ \lstinline{$} symbols means they are shown consistently in an italicised math font.
+
+Consider the following example, which does not use inline math environments when describing the variables $m$, $c$, and $y$.
+\begin{lstlisting}
+The equation for a straight line is
+\begin{equation*}
+y=mx+c,
+\end{equation*}
+where m is the slope and c is the intercept on the y axis.
+\end{lstlisting}
+
+\begin{tabular}{|p{10cm}}
+  The equation for a straight line is
+  \begin{equation*}
+  y=mx+c,
+  \end{equation*}
+  where m is the slope and c is the intercept on the y axis.
+\end{tabular}
+
+Using inline math environments, this becomes
+\begin{lstlisting}
+The equation for a straight line is
+\begin{equation*}
+y=mx+c,
+\end{equation*}
+where $m$ is the slope and $c$ is the intercept on 
+the $y$ axis.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+  The equation for a straight line is
+  \begin{equation*}
+  y=mx+c,
+  \end{equation*}
+  where $m$ is the slope and $c$ is the intercept on the $y$ axis.
+\end{tabular}
+
+The variables $m$, $c$, and $y$ are now correctly typeset using the italicised math font.
+
+\section{Working with units}
+The value of a quantity is formally the product of the number and the unit, the space being regarded as a multiplication sign.\footnote{http://www.bipm.org/en/publications/si-brochure/section5-3-3.html} Numbers and their associated units should be kept together, and typeset as a unified component with a small space between the number and the unit. One way to do this is to place the number and the unit together inside a math environment, using \lstinline$\text{}$ to keep the unit typeset in the non-mathematical font.
+\begin{lstlisting}
+The blue whale can grow up to $30\,\text{m}$ in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The blue whale can grow up to $30\,\text{m}$ in length.
+\end{tabular}
+
+The spacing between ``$30$'' and ``$\text{m}$'' is slightly smaller than the spacing between ``$\text{m}$'' and ``in'', which gives the reader a subtle indication to read ``$30\,\text{m}$'' as a single unit.
+
+Compare this with typing the value as normal text, first with, and then without a separating space:
+\begin{lstlisting}
+The blue whale can grow up to 30 m in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The blue whale can grow up to 30 m in length.
+\end{tabular}
+
+Here \LaTeX\ has treated ``$30$'' and ``$\text{m}$'' as separate words, and separated them by the same distance as all the other words in the sentence. Because \LaTeX\ treats the number and the unit as separate words, they can also end up split across line breaks:
+
+\begin{lstlisting}
+Blue whales are enormous. 
+The blue whale can grow up to 30 m in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+Blue whales are enormous. The blue whale can grow up to 30 m in length.
+\end{tabular}
+
+Writing the quantity as a composite of number and unit tells \LaTeX\ to keep them together, and (if possible) adjust the spacing between the surrounding words to avoid splitting across lines.
+\begin{lstlisting}
+Blue whales are enormous. 
+The blue whale can grow up to $30\,\text{m}$ in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+Blue whales are enormous. The blue whale can grow up to $30\,\text{m}$ in length.
+\end{tabular}
+
+The second example uses \lstinline{30m} written as a single word:
+\begin{lstlisting}
+The blue whale can grow up to 30m in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The blue whale can grow up to 30m in length.
+\end{tabular}
+
+which gives no spacing between the number and the unit.
+
+An alternative way to handle the typesetting of physical quantities is to use the \lstinline{siunitx} package.\footnote{https://ctan.org/pkg/siunitx?lang=en} This requires loading the package by including \lstinline$\usepackage{siunitx}$ in your document header. The previous example can now be written as
+\begin{lstlisting}
+Blue whales are enormous. 
+The blue whale can grow up to \SI{30}{m} in length.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+Blue whales are enormous. The blue whale can grow up to \SI{30}{m} in length.
+\end{tabular}
+
+The \lstinline{siunitx} package also makes working with complex units and scientific notation easier:
+\begin{lstlisting}
+$\Delta H = \SI{1.23e3}{\joule\per\mole}$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\Delta H = \SI{1.23e3}{\joule\per\mole}$.
+\end{tabular}
+
+Because physical quantities are written as the product of a number and a unit, the unit should appear for each value in a list or a range, e.g.
+\begin{lstlisting}
+$30\,\text{m}$, $35\,\text{m}$, and $40\,\text{m}$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$30\,\text{m}$, $35\,\text{m}$, and $40\,\text{m}$.
+\end{tabular}
+
+and not 
+\begin{lstlisting}
+$30$, $35$, and $40\,\text{m}$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$30$, $35$, and $40\,\text{m}$.
+\end{tabular}
+
+Again, this can be handled using \lstinline{siunitx} with the \lstinline{\SIlist} command:
+\begin{lstlisting}
+\SIlist{30; 35; 40}{m}.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\SIlist{30; 35; 40}{m}.
+\end{tabular}
+
+For ranges, \lstinline{siunitx} provides the \lstinline{\SIrange} command:
+\begin{lstlisting}
+\SIrange{30}{40}{m}.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\SIrange{30}{40}{m}.
+\end{tabular}
+
+\section{The multiplication symbol}
+The correct symbol for multiplication (``times'') is $\times$. This can be generated using \lstinline{\times} in a math environment. 
+\begin{lstlisting}
+$6\times6\times6$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$6\times6\times6$.
+\end{tabular}
+
+If necessary, you can slightly reduce the spacing around the $\times$ symbol using the ``small negative space'' command \lstinline{\!}:
+\begin{lstlisting}
+$6\!\times\!6\!\times\!6$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$6\!\times\!6\!\times\!6$.
+\end{tabular}
+
+Using the letter ``x'' gives the wrong symbol and incorrect spacing.\\ 
+e.g.
+\begin{lstlisting}
+6x6x6
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+6x6x6
+\end{tabular}
+
+\begin{lstlisting}
+$6x6x6$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$6x6x6$
+\end{tabular}
+
+\section{Numerical values in tables should be aligned on the decimal point.}
+Numerical data in tables containing decimal places should be vertically aligned with consistent decimal points.
+\begin{lstlisting}
+\begin{table}
+  \centering
+  \begin{tabular}{ll} \\ \hline
+  column 1 & column 2
+  12.345   & 6.789 \\
+  123.4    & 12.4 \\ \hline
+  \end{tabular}
+\end{table}
+\end{lstlisting}
+
+  \begin{table}
+  \centering
+  \begin{tabular}{lc} \hline
+  column 1 & column 2 \\ \hline
+  12.345   & 6.789 \\
+  123.4    & 12.4 \\ \hline
+  \end{tabular}
+  \caption{Incorrect vertical alignment of numbers.}
+  \end{table}
+
+The traditional way to get the decimal places to line up is fairly complicated, and involves dividing each number into components before and after the decimal point, and placing these into separate columns. Now any ``normal'' entries---such as column titles---need to use \lstinline$\multicolumn{}$ to sit across pairs of columns.
+\begin{lstlisting}
+\begin{table}
+  \centering
+  \begin{tabular}{r@.lr@.l} \hline
+  \multicolumn{2}{c}{column 1} & 
+    \multicolumn{2}{c}{column 2} \\ \hline
+  12 & 345 & 6 & 789 \\
+  123 & 4 & 12 & 4 \\ \hline
+  \end{tabular}
+\end{table}
+\end{lstlisting}
+  \begin{table}
+  \centering
+  \begin{tabular}{r@.lr@.l} \hline
+  \multicolumn{2}{l}{column 1} & 
+    \multicolumn{2}{l}{column 2} \\ \hline
+  12 & 345 & 6 & 789 \\
+  123 & 4 & 12 & 4 \\ \hline
+  \end{tabular}
+  \caption{Using column separators and \lstinline{multicolumn}.}
+\end{table}
+
+A simpler way to produce correctly aligned tables of numbers is to use the \lstinline{siunix} package, which adds the \lstinline{S} column type. Note that the column headers now need to be enclosed by grouping \lstinline${$$\ldots$\lstinline$}$ braces.
+\begin{lstlisting}
+\begin{table}
+  \centering
+  \begin{tabular}{SS} \hline
+  \text{column 1} & \text{column 2} \\ \hline
+  12.345          & 6.789    \\
+  123.4           & 12.4     \\ \hline
+  \end{tabular}
+\end{table}
+\end{lstlisting}
+\begin{table}
+  \centering
+  \begin{tabular}{SS} \hline
+  {column 1} & {column 2} \\ \hline
+  12.345   & 6.789    \\
+  123.4    & 12.4     \\ \hline
+  \end{tabular}
+  \caption{Using the \lstinline{siunitx} \lstinline{S} column type.}
+\end{table}
+
+\section{Euler's number} Euler's number $\mathrm{e}$ is a constant, and should not be italicised. Instead, use \lstinline|$\mathrm{e}$|.
+\begin{lstlisting}
+$\mathrm{e}^x$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\mathrm{e}^x$
+\end{tabular}
+
+versus
+\begin{lstlisting}
+$e^x$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$e^x$
+\end{tabular}
+
+\section{The differential sign}
+The ``$\mathrm{d}$'' in integrals and derivatives is not a variable, and should not be italicised. Again, use \lstinline|$\mathrm{d}$|.
+\begin{lstlisting}
+\begin{equation}
+y = \int f(x)\,\mathrm{d}x.
+\end{equation}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\begin{equation*}
+y = \int f(x)\,\mathrm{d}x.
+\end{equation*}
+\end{tabular}
+
+Note the small space between $f(x)$ and $\mathrm{d}x$, produced using \lstinline{\,}.
+
+\begin{lstlisting}
+\begin{equation}
+\frac{\mathrm{d}y}{\mathrm{d}x} = g(x).
+\end{equation}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\begin{equation*}
+\frac{\mathrm{d}y}{\mathrm{d}x} = g(x).
+\end{equation*}
+\end{tabular}
+
+\section{Function names}
+In a formula like $\log(x +y)$, the ``log'', which represents the logarithm function, is a single word that is usually set in roman type. However, typing \lstinline{log} in a formula denotes the product of the three quantities $l$, $o$, and $g$, which is printed as $log$. To tell \LaTeX\ that you are referring to a named function, you would instead use the \lstinline{\log} command.
+\begin{lstlisting}
+$\log(x+y)$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\log(x+y)$.
+\end{tabular}
+
+A large number of standard mathematical functions are defined as \LaTeX\ commands, such as $\sin$, $\cos$, $\tan$, $\exp$, $\lim$, $\max$.
+\begin{lstlisting}
+A large number of standard mathematical functions are 
+defined as \LaTeX\ commands, such as 
+$\sin$, $\cos$, $\tan$, $\exp$, $\lim$, $\max$.
+\end{lstlisting}
+
+\section{Quotes}
+Printed text distinguishes between opening and closing quote marks ``like these'' or `these'. These are generated using the characters \lstinline{`} and \lstinline{'}.
+\begin{lstlisting}
+``This is a quote''.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+``This is a quote''.
+\end{tabular}
+
+Note the result if you use the quote character \lstinline{"}:
+\begin{lstlisting}
+"This is a quote".
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+"This is a quote".
+\end{tabular}
+
+\section{Automatic sizing of brackets in equations}
+Use \lstinline{\left(} and \lstinline{\right)} for pairs of brackets in equations so that they are automatically resized to fit the enclosed expression.
+\begin{lstlisting}
+\begin{equation}
+\left(\frac{1}{2}\right)
+\end{equation}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\begin{equation*}
+\left(\frac{1}{2}\right)
+\end{equation*}
+\end{tabular}
+
+not 
+\begin{lstlisting}
+\begin{equation}
+(\frac{1}{2})
+\end{equation}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\begin{equation*}
+(\frac{1}{2})
+\end{equation*}
+\end{tabular}
+
+This also works with other bracket types (note that braces \lstinline${}$ need to be escaped using backslashes).
+
+\begin{lstlisting}
+$\left[ x+y \right]$ \\
+$\left\{ x+y \right\}$ \\
+$\left| x+y \right|$ \\
+$\left< x+y \right>$
+\end{eqnarray}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\left[ x+y \right]$ \\
+$\left\{ x+y \right\}$ \\
+$\left| x+y \right|$ \\
+$\left< x+y \right>$
+\end{tabular}
+
+\LaTeX\ will check that every \lstinline{\left} command has a paired \lstinline{\right} command. If you want unmatched brackets use e.g.\ \lstinline{\right.} to complete the pair.
+\begin{lstlisting}
+$\left(x+y\right.$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\left(x+y\right.$
+\end{tabular} 
+
+\section{Periods / full stops}
+To help readers distinguish the end of sentences, typesetters traditionally use slightly larger spaces after sentence-ending periods than between the words that make up each sentence. \LaTeX\ attempts to follow this convention, and assumes that a period (the character~\lstinline{.}) ends a sentence if it is followed by a space.
+
+One consequence of this is that there are some cases where \LaTeX\ will insert an expanded space unnecessarily, for example, after abbreviations.
+\begin{lstlisting}
+i.e. some other example.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+i.e. some other example.
+\end{tabular}
+
+We can tell \LaTeX\ to treat this as a normal inter-word space by adding a backslash
+\begin{lstlisting}
+i.e.\ some other example.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+i.e.\ some other example.
+\end{tabular}
+
+\section{Non-breaking spaces}
+Non-breaking spaces prevent text that forms a single object from being split across two lines. These can be indicated in your document using the tilde symbol \lstinline{~}, e.g.\ for author initial lists for acknowledgements:
+\begin{lstlisting}
+B.~J.~M. acknowledges support from $\ldots$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+B.~J.~M. acknowledges support from $\ldots$
+\end{tabular}
+
+\section{Hyphens and dashes}
+Hyphens and dashes look similar, but they are not interchangeable.\footnote{For a fuller discussion of the different uses of hyphens and dashes see Butterick's Practical Typography: \url{https://practicaltypography.com/hyphens-and-dashes.html}.}
+
+The hyphen: -. This is used in some multipart words, and compound adjectives:
+\begin{lstlisting}
+Lattice-gas Monte Carlo; non-dilute concentrations; 
+single-particle description.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+Lattice-gas Monte Carlo; non-dilute concentrations; 
+single-particle description.
+\end{tabular}
+
+
+Dashes come in two sizes: the \emph{en dash}: --, and the \emph{em dash}: ---.
+
+The en dash: -- This is used to indicate a range of values (pages $100$--$102$; Eqns.~$3$--$7$.), and to denote a connection or contrast between pairs of words, e.g.\ lithium--lithium interactions. It can also be used instead of a hyphen in a compound adjective, when one of the component words is already hyphenated e.g.\ muon-spin--spectroscopy hopping rates.
+
+An en dash is produced in \LaTeX\ using either \lstinline$\textendash{}$ or \lstinline{--}.
+\begin{lstlisting}
+lithium--lithium interactions; 
+muon-spin--spectroscopy hopping rates.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+lithium--lithium interactions; 
+muon-spin--spectroscopy hopping rates.
+\end{tabular}
+
+The em dash: --- This breaks up parts of a sentence. For example, it can be used in place of parentheses where these might break the flow of the text.
+
+An em dash is produced in \LaTeX\ using either \lstinline$\textemdash{}$ of \lstinline{---}.
+ \begin{lstlisting}
+The main thing---if you must know---is to use hyphens
+properly.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The main thing---if you must know---is to use hyphens
+properly.
+\end{tabular}
+
+Finally, all three of these: the hyphen -, the en dash --, and the em dash ---, are distinct from the minus sign $-$, which is produced inside a math environment using \lstinline{$-$}.
+
+
+\section{Punctuating equations} 
+Grammaticaly you can think of an equation as a single noun. Equations form part of the surrounding text, and require appropriate punctuation; e.g.
+\begin{lstlisting}
+The equation for a straight line is
+\begin{equation}
+y=mx+c.
+\end{equation}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The equation for a straight line is
+\begin{equation*}
+y=mx+c.
+\end{equation*}
+\end{tabular}
+
+or
+
+\begin{lstlisting}
+The equation for a straight line is
+\begin{equation}
+y=mx+c,
+\end{equation}
+where $m$ is the gradient, 
+and $c$ is the intercept on the $y$ axis.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+The equation for a straight line is
+\begin{equation*}
+y=mx+c,
+\end{equation*}
+where $m$ is the gradient, 
+and $c$ is the intercept on the $y$ axis.
+\end{tabular}
+
+\section{Ellipses} 
+Ellipses are produced using \lstinline|$\ldots$|; not three periods.
+\begin{lstlisting}
+We wrote $\ldots$ until we finished. 
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+We wrote $\ldots$ until we finished. (correct)
+\end{tabular}
+
+\begin{lstlisting}
+We wrote ... until we finished.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+We wrote ... until we finished. (incorrect)
+\end{tabular}
+
+
+\section{Angle brackets} 
+For left and right angle brackets, use \lstinline{\langle} and \lstinline{\rangle}, or \lstinline$\left<$ and \lstinline$\right>$. Don't use \lstinline{<} and \lstinline{>}.
+\begin{lstlisting}
+$\langle x+y \rangle$ \\
+$\left< x+y \right>$ \\
+$<x+y>$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\langle x+y \rangle$ \\
+$\left< x+y \right>$ \\
+$<x+y>$
+\end{tabular}
+
+\section{Text in math mode}
+Text in equations that does not refer to variables should be in a roman typeface. This can be produced using \lstinline$\text{}$.
+\begin{lstlisting}
+$\Delta E_\text{site}=E_\text{oct}-E_\text{tet}$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\Delta E_\text{site}=E_\text{oct}-E_\text{tet}$
+\end{tabular}
+
+\section{Chemical symbols}
+Chemical elements should be written in roman text, e.g.\ Cl, Mg, Li.
+Chemical formulae should contain elements in roman text, and correct subscripts and superscripts for stoichiometry, charge, etc. Subscripts and superscripts need to go inside math environments to render correctly.
+\begin{lstlisting}
+H$_2$SO$_4$ and SO$_4^{2-}$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+H$_2$SO$_4$ and SO$_4$$^{2-}$.
+\end{tabular}
+
+Variables in chemical formulae should be italicised:
+\begin{lstlisting}
+Li$_x$TiO$_2$.
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+Li$_x$TiO$_2$.
+\end{tabular}
+
+This can be simplified by using the \lstinline{mhchem} package,\footnote{\url{https://ctan.org/pkg/mhchem?lang=en}} by adding \lstinline$\usepackage{mhchem}$ to your document header, and then using the \lstinline$\ce{}$ command.
+\begin{lstlisting}
+$\ce{H2SO4}$ and $\ce{SO4^2-}$ \\
+$\ce{Li_xTiO_2}$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\ce{H2SO4}$ and $\ce{SO4^2-}$ \\
+$\ce{Li_xTiO2}$
+\end{tabular}
+
+Notice how the \lstinline$ce{}$ command tries to intelligently interpret numbers corresponding to stoichiometries and charges.
+
+\section{Vectors}
+Vector quantities should be typset in bold. This can be acheived using the \lstinline$\mathbf{}$ command:
+\begin{lstlisting}
+$\mathbf{x}$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\mathbf{x}$
+\end{tabular}
+
+\LaTeX\ includes a \lstinline$\vec{}$ commands, that produces normal weight text with an arrow over variable names:
+\begin{lstlisting}
+$\vec{x}$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\vec{x}$
+\end{tabular}
+
+The advantage of the command \lstinline$\vec{}$ is that it provides semantic information about a document. It is clear when reading the source file that \lstinline$\vec{x}$ refers to a vector quantity, while \lstinline$\mathbf{x}$ is ambiguous. To keep the semantic benefit of \lstinline$\vec{}$ you can redefine the command to give the alternate bold formatting:
+\begin{lstlisting}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+$\vec{x}_i + \vec{x}_j$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+$\vec{x}_i + \vec{x}_j$
+\end{tabular}
+
+\section{Kr\"{o}ger-Vink notation}
+TODO: Can be generated using the \lstinline{kroger_vink} package:\footnote{\url{https://github.com/bjmorgan/kroger-vink}.}
+
+\begin{lstlisting}
+\kv{F}{O}{+1} \\
+\kv{\vac}{O}{+2}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\kv{F}{O}{+1} \\
+\kv{\vac}{O}{+2}
+\end{tabular}
+
+
+\section{Further reading}
+\subsection{General typography}
+\begin{itemize}
+  \item{Butterick's Practical Typography\footnote{https://practicaltypography.com}}
+\end{itemize}
+\subsection{\LaTeX}
+\begin{itemize}
+  \item{\LaTeX\ A Document Preparation System}
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{Bibliography}
+
+\end{document}

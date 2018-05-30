@@ -1,0 +1,4 @@
+sections to add:
+- vectors
+    Check what the default \vec{} command produces. Possibly suggest this is redefined using \mathbf{}.
+
