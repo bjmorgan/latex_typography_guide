@@ -8,13 +8,11 @@
 % 
 \NeedsTeXFormat{LaTeX2e}[1994/06/01]
 \ProvidesPackage{kroger_vink}
-  [2018/05/30 v0.01 LaTeX package for my own purpose]
+  [2018/05/30 v0.01 Kroger-Vink notation package]
 
 \RequirePackage{tikz}
 
 % Kroger-Vink notation macros
-\usepackage{tikz}
-
 \makeatletter
 \newcount\my@repeat@count
 \newcommand{\myrepeat}[2]{%
@@ -46,7 +44,28 @@
 \newcommand{\kv}[3]{%
   $\text{#1}_\text{#2}^{\relcharge{#3}}$
 }
-\newcommand{\vac}{\ensuremath{V}}
+
+% vacancy options
+\newcommand{\setvacsymbol}[1]{%
+  \def \vacsymbol {#1}
+}
+
+\DeclareOption{uppercasevac}{
+  \setvacsymbol{\ensuremath{V}}
+}
+
+\DeclareOption{lowercasevac}{
+  \setvacsymbol{\ensuremath{v}}
+}
+
+\DeclareOption{squarevac}{
+  \setvacsymbol{\ensuremath{\square}}
+}
+
+\ExecuteOptions{uppercasevac}
+\ProcessOptions\relax
+
+\newcommand{\vac}{\vacsymbol}
 
 \endinput
 %%
