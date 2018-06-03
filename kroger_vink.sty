@@ -46,20 +46,20 @@
 }
 
 % vacancy options
-\newcommand{\setvacsymbol}[1]{%
+\newcommand{\kvsetvacsymbol}[1]{%
   \def \vacsymbol {#1}
 }
 
 \DeclareOption{uppercasevac}{
-  \setvacsymbol{\ensuremath{V}}
+  \kvsetvacsymbol{\ensuremath{V}}
 }
 
 \DeclareOption{lowercasevac}{
-  \setvacsymbol{\ensuremath{v}}
+  \kvsetvacsymbol{\ensuremath{v}}
 }
 
 \DeclareOption{squarevac}{
-  \setvacsymbol{\ensuremath{\square}}
+  \kvsetvacsymbol{\ensuremath{\square}}
 }
 
 \ExecuteOptions{uppercasevac}
