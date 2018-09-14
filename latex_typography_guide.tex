@@ -40,6 +40,7 @@
 \usepackage{kroger_vink}
 \lstset{numbers=none}
 \newcommand{\angstrom}{\text{\normalfont\AA}}
+\DeclareMathOperator{\lambertW}{LambertW}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -390,6 +391,18 @@ A large number of standard mathematical functions are
 defined as \LaTeX\ commands, such as 
 $\sin$, $\cos$, $\tan$, $\exp$, $\lim$, $\max$.
 \end{lstlisting}
+
+If you want to include a function name that does not have a corresponding \LaTeX\ command, you can define your own command using \lstinline{amsmath} and \lstinline{\DeclareMathOperator}:
+\begin{lstlisting}
+\usepackage{amsmath}
+\DeclareMathOperator{\lambertW}{LambertW}
+\end{lstlisting}
+\begin{lstlisting}
+$\phi = \LambertW(x)$
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\phi = \lambertW(x)$
+\end{tabular}
 
 \section{Quotes}
 Printed text distinguishes between opening and closing quote marks ``like these'' or `these'. These are generated using the characters \lstinline{`} and \lstinline{'}.
