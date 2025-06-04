@@ -228,24 +228,67 @@ The \lstinline|\num{}| command formats numbers consistently, including appropria
 
 \subsection{Uncertainties}
 
-Scientific measurements often include uncertainties, which \lstinline{siunitx} handles:
+Scientific measurements often include uncertainties, which \lstinline{siunitx} handles automatically. By default, \lstinline{siunitx} uses compact notation for uncertainties:
 
 \begin{lstlisting}
-\SI{1.23 \pm 0.05}{\meter} \\
 \SI{9.8(2)}{\meter\per\second\squared} \\
-\num{1.234 \pm 0.005}
+\SI{1.23(5)}{\meter} \\
+\num{1.234(5)}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-\SI{1.23 \pm 0.05}{\meter} \\
-\SI{9.8(2)}{\meter\per\second\squared} \\
-\num{1.234 \pm 0.005}
+\SI[uncertainty-mode=compact]{9.8(2)}{\meter\per\second\squared} \\
+\SI[uncertainty-mode=compact]{1.23(5)}{\meter} \\
+\num[uncertainty-mode=compact]{1.234(5)}
 \end{tabular}
 
-The compact notation \lstinline{9.8(2)} represents $9.8 \pm 0.2$.
+The compact notation \lstinline{9.8(2)} represents $9.8 \pm 0.2$, and \lstinline{1.23(5)} represents $1.23 \pm 0.05$.
+
+To use explicit $\pm$ notation instead, you can set this globally or locally:
+
+\textbf{Global setting} (affects entire document):
+\begin{lstlisting}
+\sisetup{uncertainty-mode = separate}
+\end{lstlisting}
+
+\textbf{Local setting} (affects individual commands):
+\begin{lstlisting}
+\SI[uncertainty-mode = separate]{1.23 \pm 0.05}{\meter} \\
+\SI[uncertainty-mode = separate]{9.8 \pm 0.2}{\meter\per\second\squared} \\
+\num[uncertainty-mode = separate]{1.234 \pm 0.005}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\SI[uncertainty-mode=separate]{1.23 \pm 0.05}{\meter} \\
+\SI[uncertainty-mode=separate]{9.8 \pm 0.2}{\meter\per\second\squared} \\
+\num[uncertainty-mode=separate]{1.234 \pm 0.005}
+\end{tabular}
+
+Both input formats work regardless of the output mode setting:
+\begin{lstlisting}
+% Compact input -> output depends on uncertainty-mode setting
+\SI{9.8(2)}{\meter\per\second\squared}
+
+% Explicit +/- input -> output depends on uncertainty-mode setting
+\SI{9.8 \pm 0.2}{\meter\per\second\squared}
+\end{lstlisting}
+
+The \lstinline{siunitx} package automatically converts between formats based on your \lstinline{uncertainty-mode} setting.
 
 \subsection{Angles}
 
-The \lstinline|\ang{}| command handles angular measurements:
+For simple angular measurements, use the \lstinline{\degree} unit with the standard \lstinline|\SI{}| command:
+
+\begin{lstlisting}
+\SI{45}{\degree} \\
+\SI{90.5}{\degree} \\
+\SI{180}{\degree}
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+\SI{45}{\degree} \\
+\SI{90.5}{\degree} \\
+\SI{180}{\degree}
+\end{tabular}
+
+For more complex angular notation involving degrees, arcminutes, and arcseconds, \lstinline{siunitx} provides the dedicated \lstinline|\ang{}| command:
 
 \begin{lstlisting}
 \ang{45} \\
@@ -258,7 +301,7 @@ The \lstinline|\ang{}| command handles angular measurements:
 \ang{90.5}
 \end{tabular}
 
-The semicolon notation represents degrees, arcminutes, and arcseconds.
+The \lstinline|\ang{}| command uses semicolon notation where the components represent degrees, arcminutes, and arcseconds respectively. For simple degree measurements, either approach works, but \lstinline|\SI{45}{\degree}| is more consistent with the pattern of using \lstinline{siunitx} for all physical quantities.
 
 \subsection{Configuring siunitx}
 
@@ -727,7 +770,7 @@ The conventions outlined below represent the preferred approach within our resea
 
 \subsection{Obtaining initial bibliography entries}
 
-The starting point for any systematic bibliography formatting workflow is obtaining raw \lstinline{.bib} entries. The most reliable source for initial entries is \textbf{doi2bib.org}, which converts DOIs directly to \lstinline{.bib} format. Simply paste a DOI into the website and receive a properly structured bibliographic entry that can then be formatted according to your conventions.
+The starting point for any systematic bibliography formatting workflow is obtaining raw \lstinline{.bib} entries. The most reliable source for initial entries is \textbf{doi2bib.org},\footnote{https://doi2bib.org} which converts DOIs directly to \lstinline{.bib} format. Simply paste a DOI into the website and receive a properly structured bibliographic entry that can then be formatted according to your conventions.
 
 These raw entries typically require systematic formatting to achieve consistency, as demonstrated in the following sections.
 
@@ -824,10 +867,6 @@ The following example demonstrates these conventions in practice:
 
 Note the changes: systematic citation key, protected acronym (\lstinline|{NMR}|), chemical formula with protected elements and subscripted stoichiometry (\lstinline|{C}a{S}i{O}$_3$|), protected capitalisation after the colon (\lstinline|{S}imulation|), abbreviated journal name, and removal of the URL field.
 
-\subsection{Implementing group conventions}
-
-Research groups can adapt these principles to develop their own systematic approach. The key is establishing clear rules that handle edge cases consistently, particularly for chemical notation, and ensuring all group members follow the same conventions. This investment in standardisation pays dividends in document quality and collaborative efficiency.
-
 \section{Vectors}
 Vector quantities should be typeset in bold. This can be achieved using the \lstinline|\mathbf{}| command:
 \begin{lstlisting}
@@ -855,10 +894,10 @@ $\vec{x}_i + \vec{x}_j$
 $\vec{x}_i + \vec{x}_j$
 \end{tabular}
 
-\section{Kröger-Vink notation}
-Kröger-Vink notation provides a way to describe defects in crystalline lattices.\cite{KrogerAndVink_SolidStatePhysics1956,KrogerBook_1964} Defects are denoted by a symbol with a subscript and superscript: $A_S^c$. The main symbol, $A$, describes the defect species. This is normally a chemical element, or a vacancy. The subscript, $S$, describes the site in the crystal lattice. This is normally the formula for the chemical element that would occupy that site in the perfect crystal, or $i$ for an interstitial. The superscript is the defect charge, defined as the charge \emph{relative} to the formal charge at this site in the perfect crystal. For example, a neutral oxygen vacancy has a charge of $0$, which gives a Kröger-Vink charge of $+2$ relative to a formal O$^{2-}$ ion. Positive relative charge is denoted by one or more dots,~\kvbullet. Negative relative charge is denoted by one or more dashes,~$^\prime$. Zero relative charge is denoted by a cross,~$\times$. Relative charges larger than $\pm1$ are indicated by repeating the appropriate symbol.
+\section{Kr\"{o}ger-Vink notation}
+Kr\"{o}ger-Vink notation provides a way to describe defects in crystalline lattices.\cite{KrogerAndVink_SolidStatePhysics1956,KrogerBook_1964} Defects are denoted by a symbol with a subscript and superscript: $A_S^c$. The main symbol, $A$, describes the defect species. This is normally a chemical element, or a vacancy. The subscript, $S$, describes the site in the crystal lattice. This is normally the formula for the chemical element that would occupy that site in the perfect crystal, or $i$ for an interstitial. The superscript is the defect charge, defined as the charge \emph{relative} to the formal charge at this site in the perfect crystal. For example, a neutral oxygen vacancy has a charge of $0$, which gives a Kr\"{o}ger-Vink charge of $+2$ relative to a formal O$^{2-}$ ion. Positive relative charge is denoted by one or more dots,~\kvbullet. Negative relative charge is denoted by one or more dashes,~$^\prime$. Zero relative charge is denoted by a cross,~$\times$. Relative charges larger than $\pm1$ are indicated by repeating the appropriate symbol.
 
-Kröger-Vink notation can be generated using the \lstinline{kroger_vink} package,\footnote{\url{https://github.com/bjmorgan/kroger-vink}.} by including \lstinline$\usepackage{kroger_vink}$ in your document header. This provides a \lstinline$\kv{A}{S}{c}$ command that takes three arguments. The first argument is the defect species, the second is the lattice site, and the third is the relative charge.
+Kr\"{o}ger-Vink notation can be generated using the \lstinline{kroger_vink} package,\footnote{\url{https://github.com/bjmorgan/kroger-vink}.} by including \lstinline$\usepackage{kroger_vink}$ in your document header. This provides a \lstinline$\kv{A}{S}{c}$ command that takes three arguments. The first argument is the defect species, the second is the lattice site, and the third is the relative charge.
 
 \begin{lstlisting}
 \usepackage{kroger_vink}
