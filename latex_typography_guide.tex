@@ -1,4 +1,4 @@
-%%% Laboratory	 Notes
+%% Laboratory	 Notes
 %%% Template by Mikhail Klassen, April 2013
 %%% Contributions from Sarah Mount, May 2014
 \documentclass[a4paper]{tufte-handout}
@@ -39,8 +39,18 @@
 \usepackage[version=4]{mhchem}
 \usepackage{kroger_vink}
 \lstset{numbers=none}
-\newcommand{\angstrom}{\text{\normalfont\AA}}
 \DeclareMathOperator{\lambertW}{LambertW}
+
+% Configure siunitx for consistent formatting
+\sisetup{
+  per-mode = reciprocal,
+  bracket-unit-denominator = true,
+  sticky-per,
+  uncertainty-mode = separate,
+}
+
+% Declare custom units
+\DeclareSIUnit{\angstrom}{\textup{\AA}}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -67,7 +77,7 @@
 \begin{document}
 \maketitle
 
-This document is for $\ldots$ One of the benefits of writing using \LaTeX\ is (ease of producing attractive documents --- good typography).
+This document is for $\ldots$ One of the benefits of writing using \LaTeX\ is the ease of producing attractive documents with good typography.
 
 TODO: why worry about typography?
 \newpage
@@ -77,7 +87,7 @@ TODO: why worry about typography?
 \newpage
 
 \section{Use the math environment for mathematical text}
-\LaTeX\ typsets text inside math environments differently to regular text. The two most common ways to include pieces of mathematical text and symbols are \emph{inline} formulae, and \emph{equations}.
+\LaTeX\ typesets text inside math environments differently to regular text. The two most common ways to include pieces of mathematical text and symbols are \emph{inline} formulae, and \emph{equations}.
 
 Inline formulae are displayed as part of their surrounding text, such as $y=mx+c$. They are delimited using \lstinline{$} $\ldots$ \lstinline{$} symbols.
 As an example, the first sentence in this paragraph is generated using
@@ -137,102 +147,169 @@ the $y$ axis.
 
 The variables $m$, $c$, and $y$ are now correctly typeset using the italicised math font.
 
-\section{Working with units}
-The value of a quantity is formally the product of the number and the unit, the space being regarded as a multiplication sign.\footnote{http://www.bipm.org/en/publications/si-brochure/section5-3-3.html} Numbers and their associated units should be kept together, and typeset as a unified component with a small space between the number and the unit. One way to do this is to place the number and the unit together inside a math environment, using \lstinline$\text{}$ to keep the unit typeset in the non-mathematical font.
-\begin{lstlisting}
-The blue whale can grow up to $30\,\text{m}$ in length.
-\end{lstlisting}
-\begin{tabular}{|p{10cm}}
-The blue whale can grow up to $30\,\text{m}$ in length.
-\end{tabular}
+\section{Working with numbers and units using siunitx}
 
-The spacing between ``$30$'' and ``$\text{m}$'' is slightly smaller than the spacing between ``$\text{m}$'' and ``in'', which gives the reader a subtle indication to read ``$30\,\text{m}$'' as a single unit.
+The \lstinline{siunitx} package\footnote{https://ctan.org/pkg/siunitx?lang=en} provides a comprehensive solution for typesetting numbers, units, and physical quantities. This package should be your primary tool for all numerical formatting in scientific documents.
 
-Compare this with typing the value as normal text, first with, and then without a separating space:
-\begin{lstlisting}
-The blue whale can grow up to 30 m in length.
-\end{lstlisting}
-\begin{tabular}{|p{10cm}}
-The blue whale can grow up to 30 m in length.
-\end{tabular}
+\subsection{Basic physical quantities}
 
-Here \LaTeX\ has treated ``$30$'' and ``$\text{m}$'' as separate words, and separated them by the same distance as all the other words in the sentence. Because \LaTeX\ treats the number and the unit as separate words, they can also end up split across line breaks:
+Physical quantities are formally the product of a number and a unit, with the space regarded as a multiplication sign. The \lstinline{siunitx} package handles this formatting automatically using the \lstinline|\SI{number}{unit}| command:
 
 \begin{lstlisting}
-Blue whales are enormous. 
-The blue whale can grow up to 30 m in length.
+The blue whale can grow up to \SI{30}{\meter} in length.
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-Blue whales are enormous. The blue whale can grow up to 30 m in length.
+The blue whale can grow up to \SI{30}{\meter} in length.
 \end{tabular}
 
-Writing the quantity as a composite of number and unit tells \LaTeX\ to keep them together, and (if possible) adjust the spacing between the surrounding words to avoid splitting across lines.
+The package automatically provides appropriate spacing between the number and unit, and prevents them from being split across line breaks. Compare this with manual formatting approaches:
+
 \begin{lstlisting}
-Blue whales are enormous. 
-The blue whale can grow up to $30\,\text{m}$ in length.
+The blue whale can grow up to 30 m in length.  % Wrong spacing
+The blue whale can grow up to 30m in length.   % No spacing
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-Blue whales are enormous. The blue whale can grow up to $30\,\text{m}$ in length.
+The blue whale can grow up to 30 m in length. (wrong spacing) \\
+The blue whale can grow up to 30m in length. (no spacing)
 \end{tabular}
 
-The second example uses \lstinline{30m} written as a single word:
+\subsection{Complex units and scientific notation}
+
+The \lstinline{siunitx} package excels at handling complex units and scientific notation:
+
 \begin{lstlisting}
-The blue whale can grow up to 30m in length.
+$\Delta H = \SI{1.23e3}{\joule\per\mole\kelvin}$ \\
+$g = \SI{9.8}{\meter\per\second\squared}$ \\
+$\rho = \SI{2.7}{\gram\per\centi\meter\cubed}$
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-The blue whale can grow up to 30m in length.
+$\Delta H = \SI{1.23e3}{\joule\per\mole\kelvin}$ \\
+$g = \SI{9.8}{\meter\per\second\squared}$ \\
+$\rho = \SI{2.7}{\gram\per\centi\meter\cubed}$
 \end{tabular}
 
-which gives no spacing between the number and the unit.
+\subsection{Ranges and lists of values}
 
-An alternative way to handle the typesetting of physical quantities is to use the \lstinline{siunitx} package.\footnote{https://ctan.org/pkg/siunitx?lang=en} This requires loading the package by including \lstinline$\usepackage{siunitx}$ in your document header. The previous example can now be written as
+For ranges and lists of values, \lstinline{siunitx} provides dedicated commands that ensure units appear with each value:
+
 \begin{lstlisting}
-Blue whales are enormous. 
-The blue whale can grow up to \SI{30}{m} in length.
+\SIrange{30}{40}{\meter} \\
+\SIlist{30; 35; 40}{\meter}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-Blue whales are enormous. The blue whale can grow up to \SI{30}{m} in length.
+\SIrange{30}{40}{\meter} \\
+\SIlist{30; 35; 40}{\meter}
 \end{tabular}
 
-The \lstinline{siunitx} package also makes working with complex units and scientific notation easier:
+This is preferred over manually listing values:
 \begin{lstlisting}
-$\Delta H = \SI{1.23e3}{\joule\per\mole}$.
+$30$, $35$, and $40\,\text{m}$ % Incorrect - missing units
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-$\Delta H = \SI{1.23e3}{\joule\per\mole}$.
+$30$, $35$, and $40\,\text{m}$ (incorrect - missing units)
 \end{tabular}
 
-Because physical quantities are written as the product of a number and a unit, the unit should appear for each value in a list or a range, e.g.
+\subsection{Number formatting}
+
+The \lstinline|\num{}| command formats numbers consistently, including appropriate use of thousand separators and scientific notation:
+
 \begin{lstlisting}
-$30\,\text{m}$, $35\,\text{m}$, and $40\,\text{m}$.
+\num{1234567} \\
+\num{1.23456789} \\
+\num{1.23e-4} \\
+\num{0.0001234}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-$30\,\text{m}$, $35\,\text{m}$, and $40\,\text{m}$.
+\num{1234567} \\
+\num{1.23456789} \\
+\num{1.23e-4} \\
+\num{0.0001234}
 \end{tabular}
 
-and not 
+\subsection{Uncertainties}
+
+Scientific measurements often include uncertainties, which \lstinline{siunitx} handles:
+
 \begin{lstlisting}
-$30$, $35$, and $40\,\text{m}$.
+\SI{1.23 \pm 0.05}{\meter} \\
+\SI{9.8(2)}{\meter\per\second\squared} \\
+\num{1.234 \pm 0.005}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-$30$, $35$, and $40\,\text{m}$.
+\SI{1.23 \pm 0.05}{\meter} \\
+\SI{9.8(2)}{\meter\per\second\squared} \\
+\num{1.234 \pm 0.005}
 \end{tabular}
 
-Again, this can be handled using \lstinline{siunitx} with the \lstinline{\SIlist} command:
+The compact notation \lstinline{9.8(2)} represents $9.8 \pm 0.2$.
+
+\subsection{Angles}
+
+The \lstinline|\ang{}| command handles angular measurements:
+
 \begin{lstlisting}
-\SIlist{30; 35; 40}{m}.
+\ang{45} \\
+\ang{12;34;56} \\
+\ang{90.5}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-\SIlist{30; 35; 40}{m}.
+\ang{45} \\
+\ang{12;34;56} \\
+\ang{90.5}
 \end{tabular}
 
-For ranges, \lstinline{siunitx} provides the \lstinline{\SIrange} command:
+The semicolon notation represents degrees, arcminutes, and arcseconds.
+
+\subsection{Configuring siunitx}
+
+You can configure \lstinline{siunitx} globally using \lstinline|\sisetup{}|:
+
 \begin{lstlisting}
-\SIrange{30}{40}{m}.
+\sisetup{
+  per-mode = reciprocal,
+  bracket-unit-denominator = true,
+  sticky-per,
+  uncertainty-mode = separate,
+}
+\end{lstlisting}
+
+These options control important formatting choices:
+\begin{itemize}
+\item \lstinline{per-mode=reciprocal} formats units like \SI{5}{\meter\per\second} as \SI{5}{\meter\per\second} rather than m/s
+\item \lstinline{bracket-unit-denominator=true} adds brackets around complex denominators
+\item \lstinline{sticky-per} ensures multiple units after \lstinline|\per| are all treated as denominators
+\item \lstinline{uncertainty-mode=separate} formats uncertainties as \SI{1.23 \pm 0.05}{\meter} rather than \SI{1.23(5)}{\meter}
+\end{itemize}
+
+\subsection{Declaring custom units}
+
+For units not predefined in \lstinline{siunitx}, you can declare your own using \lstinline|\DeclareSIUnit|. A common example is the \AA{}ngstr\"{o}m:
+
+\begin{lstlisting}
+\DeclareSIUnit{\angstrom}{\textup{\AA}}
+\end{lstlisting}
+
+This allows you to use \lstinline|\SI{1.5}{\angstrom}| in your document:
+
+\begin{lstlisting}
+The bond length is \SI{1.54}{\angstrom}.
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-\SIrange{30}{40}{m}.
+The bond length is \SI{1.54}{\angstrom}.
 \end{tabular}
+
+\subsection{Manual formatting: understanding the principles}
+
+While \lstinline{siunitx} should be your primary approach, understanding the underlying typography principles is valuable. The manual approach places numbers and units in a math environment with a small space:
+
+\begin{lstlisting}
+$30\,\text{m}$  % Manual approach
+\end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$30\,\text{m}$ (manual formatting)
+\end{tabular}
+
+The \lstinline|\,| command produces a thin space, and \lstinline|\text{}| ensures the unit appears in the non-mathematical font. However, this manual approach lacks the automatic formatting, line-break protection, and extensive unit support that \lstinline{siunitx} provides.
 
 \section{The multiplication symbol}
 The correct symbol for multiplication (``times'') is $\times$. This can be generated using \lstinline{\times} in a math environment. 
@@ -290,37 +367,15 @@ Numerical data in tables containing decimal places should be vertically aligned 
   \caption{Incorrect vertical alignment of numbers.}
   \end{table}
 
-The traditional way to get the decimal places to line up is fairly complicated, and involves dividing each number into components before and after the decimal point, and placing these into separate columns. Now any ``normal'' entries---such as column titles---need to use \lstinline$\multicolumn{}$ to sit across pairs of columns.
-\begin{lstlisting}
-\begin{table}
-  \centering
-  \begin{tabular}{r@.lr@.l} \hline
-  \multicolumn{2}{c}{column 1} & 
-    \multicolumn{2}{c}{column 2} \\ \hline
-  12 & 345 & 6 & 789 \\
-  123 & 4 & 12 & 4 \\ \hline
-  \end{tabular}
-\end{table}
-\end{lstlisting}
-  \begin{table}
-  \centering
-  \begin{tabular}{r@.lr@.l} \hline
-  \multicolumn{2}{l}{column 1} & 
-    \multicolumn{2}{l}{column 2} \\ \hline
-  12 & 345 & 6 & 789 \\
-  123 & 4 & 12 & 4 \\ \hline
-  \end{tabular}
-  \caption{Using column separators and \lstinline{multicolumn}.}
-\end{table}
+The \lstinline{siunitx} package provides the \lstinline{S} column type that automatically aligns numbers on their decimal points. Column headers need to be enclosed in braces \lstinline|{}| to prevent them from being interpreted as numbers:
 
-A simpler way to produce correctly aligned tables of numbers is to use the \lstinline{siunix} package, which adds the \lstinline{S} column type. Note that the column headers now need to be enclosed by grouping \lstinline${$$\ldots$\lstinline$}$ braces.
 \begin{lstlisting}
 \begin{table}
   \centering
   \begin{tabular}{SS} \hline
-  \text{column 1} & \text{column 2} \\ \hline
-  12.345          & 6.789    \\
-  123.4           & 12.4     \\ \hline
+  {column 1} & {column 2} \\ \hline
+  12.345     & 6.789      \\
+  123.4      & 12.4       \\ \hline
   \end{tabular}
 \end{table}
 \end{lstlisting}
@@ -334,7 +389,19 @@ A simpler way to produce correctly aligned tables of numbers is to use the \lsti
   \caption{Using the \lstinline{siunitx} \lstinline{S} column type.}
 \end{table}
 
-\section{Euler's number} Euler's number $\mathrm{e}$ is a constant, and should not be italicised. Instead, use \lstinline|$\mathrm{e}$|.
+The \lstinline{S} column type can also handle units and uncertainties automatically:
+
+\begin{lstlisting}
+\begin{tabular}{S[table-format=3.2]} \hline
+{Temperature / \si{\kelvin}} \\ \hline
+298.15 \\
+373.15 \\
+77.35  \\ \hline
+\end{tabular}
+\end{lstlisting}
+
+\section{Euler's number} 
+Euler's number $\mathrm{e}$ is a mathematical constant, and should not be italicised. Instead, use \lstinline|$\mathrm{e}$|.
 \begin{lstlisting}
 $\mathrm{e}^x$
 \end{lstlisting}
@@ -377,28 +444,37 @@ Note the small space between $f(x)$ and $\mathrm{d}x$, produced using \lstinline
 \end{tabular}
 
 \section{Function names}
-In a formula like $\log(x +y)$, the ``log'', which represents the logarithm function, is a single word that is usually set in roman type. However, typing \lstinline{log} in a formula denotes the product of the three quantities $l$, $o$, and $g$, which is printed as $log$. To tell \LaTeX\ that you are referring to a named function, you would instead use the \lstinline{\log} command.
+In a formula like $\exp(x +y)$, the ``exp'', which represents the exponential function, is a single word that is usually set in roman type. However, typing \lstinline{exp} in a formula denotes the product of the three quantities $e$, $x$, and $p$, which is printed as $exp$. To tell \LaTeX\ that you are referring to a named function, you would instead use the \lstinline{\exp} command.
 \begin{lstlisting}
-$\log(x+y)$.
+$\exp(x+y)$.
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-$\log(x+y)$.
+$\exp(x+y)$.
 \end{tabular}
 
 A large number of standard mathematical functions are defined as \LaTeX\ commands, such as $\sin$, $\cos$, $\tan$, $\exp$, $\lim$, $\max$.
 \begin{lstlisting}
-A large number of standard mathematical functions are 
-defined as \LaTeX\ commands, such as 
-$\sin$, $\cos$, $\tan$, $\exp$, $\lim$, $\max$.
+$\sin(x)$ 
+$\cos(\theta)$ 
+$\exp(ikx)$ 
+$\lim_{x \to 0} 
+f(x)$
 \end{lstlisting}
+\begin{tabular}{|p{10cm}}
+$\sin(x)$ \\
+$\cos(\theta)$ \\
+$\exp(ikx)$ \\
+$\lim_{x \to 0}$ \\ 
+$f(x)$ \\
+\end{tabular}
 
-If you want to include a function name that does not have a corresponding \LaTeX\ command, you can define your own command using \lstinline{amsmath} and \lstinline{\DeclareMathOperator}:
+If you want to include a function name that does not have a corresponding \LaTeX\ command, you can define your own command using \lstinline{amsmath} and \lstinline|\DeclareMathOperator|:
 \begin{lstlisting}
 \usepackage{amsmath}
 \DeclareMathOperator{\lambertW}{LambertW}
 \end{lstlisting}
 \begin{lstlisting}
-$\phi = \LambertW(x)$
+$\phi = \lambertW(x)$
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
 $\phi = \lambertW(x)$
@@ -422,7 +498,7 @@ Note the result if you use the quote character \lstinline{"}:
 \end{tabular}
 
 \section{Automatic sizing of brackets in equations}
-Use \lstinline{\left(} and \lstinline{\right)} for pairs of brackets in equations so that they are automatically resized to fit the enclosed expression.
+Use \lstinline|\left(| and \lstinline|\right)| for pairs of brackets in equations so that they are automatically resized to fit the enclosed expression.
 \begin{lstlisting}
 \begin{equation}
 \left(\frac{1}{2}\right)
@@ -446,14 +522,13 @@ not
 \end{equation*}
 \end{tabular}
 
-This also works with other bracket types (note that braces \lstinline${}$ need to be escaped using backslashes).
+This also works with other bracket types (note that braces \lstinline|{}| need to be escaped using backslashes).
 
 \begin{lstlisting}
 $\left[ x+y \right]$ \\
 $\left\{ x+y \right\}$ \\
 $\left| x+y \right|$ \\
 $\left< x+y \right>$
-\end{eqnarray}
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
 $\left[ x+y \right]$ \\
@@ -462,7 +537,7 @@ $\left| x+y \right|$ \\
 $\left< x+y \right>$
 \end{tabular}
 
-\LaTeX\ will check that every \lstinline{\left} command has a paired \lstinline{\right} command. If you want unmatched brackets use e.g.\ \lstinline{\right.} to complete the pair.
+\LaTeX\ will check that every \lstinline|\left| command has a paired \lstinline|\right| command. If you want unmatched brackets use e.g.\ \lstinline|\right.| to complete the pair.
 \begin{lstlisting}
 $\left(x+y\right.$
 \end{lstlisting}
@@ -528,7 +603,7 @@ muon-spin--spectroscopy hopping rates.
 
 The em dash: --- This breaks up parts of a sentence. For example, it can be used in place of parentheses where these might break the flow of the text.
 
-An em dash is produced in \LaTeX\ using either \lstinline$\textemdash{}$ of \lstinline{---}.
+An em dash is produced in \LaTeX\ using either \lstinline$\textemdash{}$ or \lstinline{---}.
  \begin{lstlisting}
 The main thing---if you must know---is to use hyphens
 properly.
@@ -542,7 +617,7 @@ Finally, all three of these: the hyphen -, the en dash --, and the em dash ---, 
 
 
 \section{Punctuating equations} 
-Grammaticaly you can think of an equation as a single noun. Equations form part of the surrounding text, and require appropriate punctuation; e.g.
+Grammatically you can think of an equation as a single noun. Equations form part of the surrounding text, and require appropriate punctuation; e.g.
 \begin{lstlisting}
 The equation for a straight line is
 \begin{equation}
@@ -593,7 +668,7 @@ We wrote ... until we finished. (incorrect)
 
 
 \section{Angle brackets} 
-For left and right angle brackets, use \lstinline{\langle} and \lstinline{\rangle}, or \lstinline$\left<$ and \lstinline$\right>$. Don't use \lstinline{<} and \lstinline{>}.
+For left and right angle brackets, use \lstinline|\langle| and \lstinline|\rangle|, or \lstinline$\left<$ and \lstinline$\right>$. Don't use \lstinline{<} and \lstinline{>}.
 \begin{lstlisting}
 $\langle x+y \rangle$ \\
 $\left< x+y \right>$ \\
@@ -606,7 +681,7 @@ $<x+y>$
 \end{tabular}
 
 \section{Text in math mode}
-Text in equations that does not refer to variables should be in a roman typeface. This can be produced using \lstinline$\mathrm{}$.
+Text in equations that does not refer to variables should be in an upright typeface. This can be produced using \lstinline|\mathrm{}|.
 \begin{lstlisting}
 $\Delta E_\mathrm{site}=E_\mathrm{oct}-E_\mathrm{tet}$
 \end{lstlisting}
@@ -615,13 +690,13 @@ $\Delta E_\mathrm{site}=E_\mathrm{oct}-E_\mathrm{tet}$
 \end{tabular}
 
 \section{Chemical symbols}
-Chemical elements should be written in roman text, e.g.\ Cl, Mg, Li.
-Chemical formulae should contain elements in roman text, and correct subscripts and superscripts for stoichiometry, charge, etc. Subscripts and superscripts need to go inside math environments to render correctly.
+Chemical elements should be written in upright text, e.g.\ Cl, Mg, Li.
+Chemical formulae should contain elements in upright text, and correct subscripts and superscripts for stoichiometry, charge, etc. Subscripts and superscripts need to go inside math environments to render correctly.
 \begin{lstlisting}
 H$_2$SO$_4$ and SO$_4^{2-}$.
 \end{lstlisting}
 \begin{tabular}{|p{10cm}}
-H$_2$SO$_4$ and SO$_4$$^{2-}$.
+H$_2$SO$_4$ and SO$_4^{2-}$.
 \end{tabular}
 
 Variables in chemical formulae should be italicised:
@@ -632,7 +707,7 @@ Li$_x$TiO$_2$.
 Li$_x$TiO$_2$.
 \end{tabular}
 
-This can be simplified by using the \lstinline{mhchem} package,\footnote{\url{https://ctan.org/pkg/mhchem?lang=en}} by adding \lstinline$\usepackage{mhchem}$ to your document header, and then using the \lstinline$\ce{}$ command.
+This can be simplified by using the \lstinline{mhchem} package,\footnote{\url{https://ctan.org/pkg/mhchem?lang=en}} by adding \lstinline|\usepackage{mhchem}| to your document header, and then using the \lstinline|\ce{}| command.
 \begin{lstlisting}
 $\ce{H2SO4}$ and $\ce{SO4^2-}$ \\
 $\ce{Li_xTiO_2}$
@@ -642,10 +717,119 @@ $\ce{H2SO4}$ and $\ce{SO4^2-}$ \\
 $\ce{Li_xTiO2}$
 \end{tabular}
 
-Notice how the \lstinline$ce{}$ command tries to intelligently interpret numbers corresponding to stoichiometries and charges.
+Notice how the \lstinline|\ce{}| command tries to intelligently interpret numbers corresponding to stoichiometries and charges.
+
+\section{Bibliography formatting: a systematic approach}
+
+Consistent bibliography formatting is essential for professional scientific documents, yet it is often where typography standards break down. A systematic approach to bibliography formatting provides several key benefits: bibliographies are well-formatted with consistent typography and formatting; \lstinline{.bib} data can be reused across papers without reformatting; multiple authors can contribute to paper bibliographies without needing to check formatting conventions in each case; and standardised cite strings allow coauthors to have a better idea of which papers are being cited when they read the source \lstinline{.tex} of a paper.
+
+The conventions outlined below represent the preferred approach within our research group. These demonstrate how to handle the complex edge cases that commonly arise in scientific bibliographies, particularly those involving chemical notation.
+
+\subsection{Obtaining initial bibliography entries}
+
+The starting point for any systematic bibliography formatting workflow is obtaining raw \lstinline{.bib} entries. The most reliable source for initial entries is \textbf{doi2bib.org}, which converts DOIs directly to \lstinline{.bib} format. Simply paste a DOI into the website and receive a properly structured bibliographic entry that can then be formatted according to your conventions.
+
+These raw entries typically require systematic formatting to achieve consistency, as demonstrated in the following sections.
+
+\subsection{Citation keys}
+
+Citation keys should follow a systematic naming convention that makes entries easily identifiable and sortable. The format depends on the number of authors:
+
+\begin{itemize}
+\item \textbf{Single author}: \lstinline{AuthorJournalYear} (e.g., \lstinline{MorganPhysChemChemPhys2024})
+\item \textbf{Two authors}: \lstinline{FirstAuthorAndSecondAuthorJournalYear} (e.g., \lstinline{MorganAndWatsonJAmChemSoc2024})
+\item \textbf{Three or more authors}: \lstinline{FirstAuthorEtAlJournalYear} (e.g., \lstinline{MorganEtAlPhysChemChemPhys2024})
+\end{itemize}
+
+The journal name component should have all spaces removed and use title case (e.g., \lstinline{PhysChemChemPhys}, \lstinline{JAmChemSoc}).
+
+\subsection{Journal names}
+
+Journal names should use standard abbreviations following established conventions. Common examples include:
+\begin{itemize}
+\item Journal of Physical Chemistry $\to$ J. Phys. Chem.
+\item Journal of the American Chemical Society $\to$ J. Am. Chem. Soc.
+\item Physical Chemistry Chemical Physics $\to$ Phys. Chem. Chem. Phys.
+\item Nature Materials $\to$ Nature Mater.
+\end{itemize}
+
+\subsection{Title formatting}
+
+Titles require careful attention to capitalisation and chemical notation:
+
+\textbf{Capitalisation protection}: Use braces \lstinline|{}| to protect capitalisation that should be preserved regardless of bibliography style:
+\begin{itemize}
+\item The first word immediately after a colon or em dash
+\item Acronyms (e.g., \lstinline|{NMR}|, \lstinline|{DFT}|, \lstinline|{XRD}|)
+\item Chemical element symbols (e.g., \lstinline|{C}a|, \lstinline|{S}i|, \lstinline|{O}|)
+\end{itemize}
+
+\textbf{Chemical formulae}: Chemical formulae in titles need special handling to ensure correct typography:
+\begin{lstlisting}
+CaSiO3 becomes {C}a{S}i{O}$_3$
+Al2O3 becomes {A}l$_2${O}$_3$
+\end{lstlisting}
+
+Element symbols have their first letter protected by braces, and stoichiometric coefficients are correctly subscripted using math mode.
+
+\textbf{Special characters}: Replace Unicode symbols with appropriate \LaTeX\ commands:
+\begin{itemize}
+\item $\square$ $\to$ \lstinline{$\square$}
+\item $\leq$ $\to$ \lstinline{$\leq$}
+\item $\geq$ $\to$ \lstinline{$\geq$}
+\item $\to$ $\to$ \lstinline{$\rightarrow$}
+\item $^\circ$ $\to$ \lstinline{$^\circ$}
+\end{itemize}
+
+\subsection{Example transformation}
+
+The following example demonstrates these conventions in practice:
+
+\textbf{Original entry}:
+\begin{lstlisting}
+@article{Pedone2010,
+  title = {Multinuclear NMR of CaSiO3 glass: simulation 
+           from first-principles},
+  volume = {12},
+  ISSN = {1463-9084},
+  url = {http://dx.doi.org/10.1039/b924489a},
+  DOI = {10.1039/b924489a},
+  number = {23},
+  journal = {Physical Chemistry Chemical Physics},
+  publisher = {Royal Society of Chemistry (RSC)},
+  author = {Pedone, Alfonso and Charpentier, Thibault 
+            and Menziani, Maria Cristina},
+  year = {2010},
+  pages = {6054}
+}
+\end{lstlisting}
+
+\textbf{Formatted entry}:
+\begin{lstlisting}
+@article{PedoneEtAl_PhysChemChemPhys2010,
+  title = {Multinuclear {NMR} of {C}a{S}i{O}$_3$ Glass: 
+           {S}imulation from First-Principles},
+  volume = {12},
+  ISSN = {1463-9084},
+  DOI = {10.1039/b924489a},
+  number = {23},
+  journal = {Phys. Chem. Chem. Phys.},
+  publisher = {Royal Society of Chemistry (RSC)},
+  author = {Pedone, Alfonso and Charpentier, Thibault 
+            and Menziani, Maria Cristina},
+  year = {2010},
+  pages = {6054}
+}
+\end{lstlisting}
+
+Note the changes: systematic citation key, protected acronym (\lstinline|{NMR}|), chemical formula with protected elements and subscripted stoichiometry (\lstinline|{C}a{S}i{O}$_3$|), protected capitalisation after the colon (\lstinline|{S}imulation|), abbreviated journal name, and removal of the URL field.
+
+\subsection{Implementing group conventions}
+
+Research groups can adapt these principles to develop their own systematic approach. The key is establishing clear rules that handle edge cases consistently, particularly for chemical notation, and ensuring all group members follow the same conventions. This investment in standardisation pays dividends in document quality and collaborative efficiency.
 
 \section{Vectors}
-Vector quantities should be typset in bold. This can be acheived using the \lstinline$\mathbf{}$ command:
+Vector quantities should be typeset in bold. This can be achieved using the \lstinline|\mathbf{}| command:
 \begin{lstlisting}
 $\mathbf{x}$
 \end{lstlisting}
@@ -653,7 +837,7 @@ $\mathbf{x}$
 $\mathbf{x}$
 \end{tabular}
 
-\LaTeX\ includes a \lstinline$\vec{}$ commands, that produces normal weight text with an arrow over variable names:
+\LaTeX\ includes a \lstinline|\vec{}| command, that produces normal weight text with an arrow over variable names:
 \begin{lstlisting}
 $\vec{x}$
 \end{lstlisting}
@@ -661,7 +845,7 @@ $\vec{x}$
 $\vec{x}$
 \end{tabular}
 
-The advantage of the command \lstinline$\vec{}$ is that it provides semantic information about a document. It is clear when reading the source file that \lstinline$\vec{x}$ refers to a vector quantity, while \lstinline$\mathbf{x}$ is ambiguous. To keep the semantic benefit of \lstinline$\vec{}$ you can redefine the command to give the alternate bold formatting:
+The advantage of the command \lstinline|\vec{}| is that it provides semantic information about a document. It is clear when reading the source file that \lstinline|\vec{x}| refers to a vector quantity, while \lstinline|\mathbf{x}| is ambiguous. To keep the semantic benefit of \lstinline|\vec{}| you can redefine the command to give the alternate bold formatting:
 \begin{lstlisting}
 \renewcommand{\vec}[1]{\mathbf{#1}}
 $\vec{x}_i + \vec{x}_j$
@@ -671,10 +855,10 @@ $\vec{x}_i + \vec{x}_j$
 $\vec{x}_i + \vec{x}_j$
 \end{tabular}
 
-\section{Kr\"{o}ger-Vink notation}
-Kr\"{o}ger-Vink notation provides a way to describe defects in crystalling lattices.\cite{KrogerAndVink_SolidStatePhysics1956,KrogerBook_1964} Defects are donoted by a symbol with a subscript and superscript: $A_S^c$. The main symbol, $A$, describes the defect species. This is normally a chemical element, or a vacancy. The subscript, $S$, describes the site in the crystal lattice. This is normally the formula for the chemical element that would occupy that site in the perfect crystal, or $i$ for an interstitial. The superscript is the defect charge, defines as the charge \emph{relative} to the formal charge at this site in the perfect crystal. For example, a neutral oxygen vacancy has a charge of $0$, which gives a Kr\"{o}ger-Vink charge of $+2$ relative to a formal O$^{2-}$ ion. Positive relative charge is denoted by one or more dots,~\kvbullet. Negative relative charge is denoted by one or more dashes,~$^\prime$. Zero relative charge is denoted by a cross,~$\times$. Relative charges larger than $\pm1$ are indicated by repeating the appropriate symbol.
+\section{Kröger-Vink notation}
+Kröger-Vink notation provides a way to describe defects in crystalline lattices.\cite{KrogerAndVink_SolidStatePhysics1956,KrogerBook_1964} Defects are denoted by a symbol with a subscript and superscript: $A_S^c$. The main symbol, $A$, describes the defect species. This is normally a chemical element, or a vacancy. The subscript, $S$, describes the site in the crystal lattice. This is normally the formula for the chemical element that would occupy that site in the perfect crystal, or $i$ for an interstitial. The superscript is the defect charge, defined as the charge \emph{relative} to the formal charge at this site in the perfect crystal. For example, a neutral oxygen vacancy has a charge of $0$, which gives a Kröger-Vink charge of $+2$ relative to a formal O$^{2-}$ ion. Positive relative charge is denoted by one or more dots,~\kvbullet. Negative relative charge is denoted by one or more dashes,~$^\prime$. Zero relative charge is denoted by a cross,~$\times$. Relative charges larger than $\pm1$ are indicated by repeating the appropriate symbol.
 
-Kr\"{o}ger-Vink notation can be generated using the \lstinline{kroger_vink} package,\footnote{\url{https://github.com/bjmorgan/kroger-vink}.} by including \lstinline$\usepackage{kroger_vink}$ in your document header. This provides a \lstinline$\kv{A}{S}{c}$ command that takes three arguments. The first argument is the defect species, the second is the lattice site, and the third is the relative charge.
+Kröger-Vink notation can be generated using the \lstinline{kroger_vink} package,\footnote{\url{https://github.com/bjmorgan/kroger-vink}.} by including \lstinline$\usepackage{kroger_vink}$ in your document header. This provides a \lstinline$\kv{A}{S}{c}$ command that takes three arguments. The first argument is the defect species, the second is the lattice site, and the third is the relative charge.
 
 \begin{lstlisting}
 \usepackage{kroger_vink}
@@ -688,7 +872,7 @@ Kr\"{o}ger-Vink notation can be generated using the \lstinline{kroger_vink} pack
 \kv{\vac}{O}{+2}
 \end{tabular}
 
-The default notation for a vanancy is an italic capital $V$. This can be changed to a lower case $v$ or an empty square symbol $\square$ by selecting the corresponding package options.
+The default notation for a vacancy is an italic capital $V$. This can be changed to a lower case $v$ or an empty square symbol $\square$ by selecting the corresponding package options.
 
 \begin{lstlisting}
 \usepackage[lowercasevac]{kroger_vink}
@@ -717,6 +901,7 @@ The default notation for a vanancy is an italic capital $V$. This can be changed
 \subsection{\LaTeX}
 \begin{itemize}
   \item{\LaTeX\ A Document Preparation System}
+  \item{The \lstinline{siunitx} package documentation}
 \end{itemize}
 
 \bibliographystyle{plain}
